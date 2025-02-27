@@ -3,7 +3,7 @@
 
 __attribute__((weak)) // if there is no main function, use this one.
 int main() {
-    puts("[user] placeholder function");
+    puts("[user] placeholder function\n");
     return 0;
 }
 void clear_bss() {

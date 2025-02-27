@@ -21,18 +21,12 @@ void trap_init() {
     asm volatile("csrw stvec, %0" ::"r"(__alltraps));
     puts("[kernel] Trap inited.");
 }
-void trap_handler(TrapContext *ctx) {
-    uint64_t scause, stval;
+TrapContext *trap_handler(TrapContext *ctx) {
+    uint64_t scause, stval, sepc;
     asm volatile("csrr %0, scause" : "=r"(scause));
     asm volatile("csrr %0, stval" : "=r"(stval));
-    puts("[kernel] Entered Trap.\n[kernel] Registers:");
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 8; j++) {
-            printf("x[%d]=%x ", i * 8 + j, ctx->x[i * 8 + j]);
-        }
-        puts("");
-    }
-    printf("[kernel] scause=%x stval=%x\n", scause, stval);
+    asm volatile("csrr %0, sepc" : "=r"(sepc));
+    // printf("[kernel] scause=%x stval=%x\n", scause, stval);
     switch (scause & ~(1L << 63)) {
         case 2: // IllegalInstruction
             puts("[kernel] IllegalInstruction in application");
@@ -51,7 +45,15 @@ void trap_handler(TrapContext *ctx) {
             batch_run_next_app();
             break;
         default:
-            printf("[kernel] Unhandled exception! scause=%x stval=%x\n", scause, stval);
+            printf("[kernel] Unhandled exception! scause=%x stval=%x sepc=%x\n", scause, stval, sepc);
+            printf("[kernel] registers:\n");
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 8; j++) {
+                    printf("x[%d]=%x ", i * 8 + j, ctx->x[i * 8 + j]);
+                }
+                puts("");
+            }
             batch_run_next_app();
     }
+    return ctx;
 }

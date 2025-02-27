@@ -6,7 +6,7 @@ USER_ELF=$(wildcard $(USER_DIR)/bin/*.c)
 USER_FILE=$(wildcard $(USER_DIR)/*.c) $(wildcard $(USER_DIR)/*.S)
 KERNEL_LINKER=$(KERNEL_DIR)/linker.ld
 USER_LINKER=$(USER_DIR)/linker.ld
-FLAGS=-ffreestanding -nostdlib -g -mcmodel=medany -march=rv64gc_zifencei
+FLAGS=-ffreestanding -nostdlib -O2 -g -mcmodel=medany -march=rv64gc_zifencei
 USER_BASE_NAME=$(basename $(notdir $(USER_ELF)))
 USER_BIN=$(addprefix $(TARGET_DIR)/,$(addsuffix .bin,$(USER_BASE_NAME)))
 USER_ELF=$(addprefix $(TARGET_DIR)/,$(addsuffix .elf,$(USER_BASE_NAME)))

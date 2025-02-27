@@ -44,6 +44,8 @@ int64_t vprintf(const char *format, va_list args) {
                 }
                 case 'x': {
                     int64_t x = va_arg(args, int64_t);
+                    console_putchar('0');
+                    console_putchar('x');
                     put_int(x, 16);
                     break;
                 }
