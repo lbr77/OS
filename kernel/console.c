@@ -8,6 +8,7 @@ int64_t puts(const char *s) {
     }
     console_putchar('\n');
     return 0;
+    panic("Unreachable code in puts.");
 }
 
 char base_chr[] = "0123456789ABCDEF";
@@ -58,30 +59,6 @@ int64_t vprintf(const char *format, va_list args) {
                     char c = va_arg(args, int64_t);
                     console_putchar(c);
                     break;
-                }
-                case 'l':  {
-                    if(format ++) {
-                        switch(*format) {
-                            case 'd': {
-                                long x = va_arg(args, long);
-                                put_int(x, 10);
-                                break;
-                            }
-                            case 'x': {
-                                long x = va_arg(args, long);
-                                put_int(x, 16);
-                                break;
-                            }
-                            default:
-                                console_putchar('%');
-                                console_putchar('l');
-                                console_putchar(*format);
-                                break;
-                        }
-                    } else {
-                        console_putchar('%');
-                        console_putchar('l');
-                    }
                 }
                 default:
                     console_putchar('%');

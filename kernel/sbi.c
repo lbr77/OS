@@ -33,4 +33,9 @@ void console_putchar(char ch) {
 void system_shutdown() {
     puts("[kernel] Goodbye!");
     sbi_call(SBI_SHUTDOWN, 0, 0, 0);
+    panic("Unreachable code in system_shutdown after sbi_call.");
+}
+
+void set_timer(uint64_t time) {
+    sbi_call(SBI_SET_TIMER,time,0,0);
 }

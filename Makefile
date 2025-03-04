@@ -12,7 +12,7 @@ USER_BIN=$(addprefix $(TARGET_DIR)/,$(addsuffix .bin,$(USER_BASE_NAME)))
 USER_ELF=$(addprefix $(TARGET_DIR)/,$(addsuffix .elf,$(USER_BASE_NAME)))
 
 
-default: hello_world.bin os.bin run
+default: ubin os.bin run
 
 clean:
 	rm -rf $(TARGET_DIR)
@@ -20,22 +20,19 @@ clean:
 mkdir:
 	mkdir -p $(TARGET_DIR)
 	
-$(TARGET_DIR)/%.bin: $(USER_DIR)/bin/%.c mkdir
-	riscv64-unknown-elf-gcc $< $(FLAGS) -T $(USER_LINKER) -o $(TARGET_DIR)/$(basename $(notdir $<))
-	riscv64-unknown-elf-objcopy $(TARGET_DIR)/$(basename $(notdir $<)) --strip-all -O binary $(TARGET_DIR)/$(basename $(notdir $<)).bin
-
 os.bin: mkdir
 	riscv64-unknown-elf-gcc $(KERNEL_FILE) $(FLAGS) -T $(KERNEL_LINKER) -o $(TARGET_DIR)/os
 	riscv64-unknown-elf-objcopy $(TARGET_DIR)/os --strip-all -O binary $(TARGET_DIR)/os.bin
-	
-hello_world.bin: mkdir
-	riscv64-unknown-elf-gcc $(USER_FILE) $(FLAGS) -T $(USER_LINKER) -o $(TARGET_DIR)/hello_world
-	riscv64-unknown-elf-objcopy $(TARGET_DIR)/hello_world --strip-all -O binary $(TARGET_DIR)/hello_world.bin
+
 kill:
 	killall qemu-system-riscv64
 
-run: hello_world.bin os.bin
+run: ubin os.bin
 	qemu-system-riscv64 -machine virt -nographic -cpu rv64 -bios bootloader/rustsbi-qemu.bin -device loader,file=$(TARGET_DIR)/os.bin,addr=0x80200000 
 
-debug: hello_world.bin os.bin
+debug: ubin os.bin
 	qemu-system-riscv64 -machine virt -nographic -cpu rv64 -bios bootloader/rustsbi-qemu.bin -device loader,file=$(TARGET_DIR)/os.bin,addr=0x80200000 -s -S
+
+
+ubin:
+	python3 user/compile_user.py

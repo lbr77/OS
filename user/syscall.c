@@ -3,7 +3,8 @@
 
 const int SYSCALL_EXIT = 93;
 const int SYSCALL_WRITE = 64;
-
+const int SYSCALL_YIELD = 124;
+const int SYSCALL_GETTIME = 169;
 
 int64_t syscall(uint64_t id, uint64_t a0, uint64_t a1, uint64_t a2) {
     int64_t ret;
@@ -27,4 +28,11 @@ int64_t sys_write(int64_t fd, const char *buf, int64_t len) {
 
 int64_t sys_exit(int64_t exit_code) {
     return syscall(SYSCALL_EXIT, exit_code, 0, 0);
+}
+
+int64_t get_time() {
+    return syscall(SYSCALL_GETTIME,0,0,0);
+}
+int64_t yield() {
+    return syscall(SYSCALL_YIELD,0,0,0);
 }

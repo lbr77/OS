@@ -19,4 +19,6 @@ int64_t printf(const char *format, ...);
 void panic(const char *s, ...);
 void write(int64_t fd, const char *buf, int64_t len);
 void exit(int64_t code);
+int64_t get_time();
+int64_t yield();
 #endif // _SYS_H_

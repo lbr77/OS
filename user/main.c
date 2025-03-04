@@ -1,9 +1,9 @@
 // 00 hello_world
-#include "sys.h"
-int main() {
-    puts("Hello, world!\n");
-    return 0;
-}
+// #include "sys.h"
+// int main() {
+//     puts("Hello, world!\n");
+//     return 0;
+// }
 // 01 store_fault
 // int main() {
 //     *(volatile unsigned char *)0 = 0;
